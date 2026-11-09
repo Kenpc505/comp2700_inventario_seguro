@@ -1,0 +1,17 @@
+[
+  {
+    "id": "P001",
+    "nombre": "Teclado",
+    "cantidad": 10
+  },
+  {
+    "id": "P002",
+    "nombre": "Rat\u00f3n",
+    "cantidad": 5
+  },
+  {
+    "id": "P003",
+    "nombre": "Monitor",
+    "cantidad": 5
+  }
+]
