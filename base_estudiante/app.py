@@ -1,6 +1,8 @@
 """BASE EDUCATIVA INSEGURA. Corregir los TODO antes de la entrega."""
 import json
+from datetime import datetime
 from pathlib import Path
+from seguridad import verificar_clave
 
 RAIZ = Path(__file__).resolve().parent
 DATOS = RAIZ / "inventario.json"
@@ -9,44 +11,84 @@ LOG = RAIZ / "auditoria.jsonl"
 
 
 def cargar_inventario():
-    # TODO: controlar archivo ausente y JSON inválido. No sobrescribirlos.
-    return json.loads(DATOS.read_text(encoding="utf-8"))
-
+# TODO: controlar archivo ausente y JSON inválido. No sobrescribirlos.
+    try:
+        return json.loads(DATOS.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        print("Error: no se encontró el archivo de inventario.")
+    except json.JSONDecodeError:
+        print("Error: el archivo de inventario no tiene un formato JSON válido.")
+    return None
+    
 
 def guardar_inventario(productos):
     DATOS.write_text(json.dumps(productos, indent=2), encoding="utf-8")
 
 
 def registrar_evento(usuario, accion, resultado, **detalles):
-    # TODO: guardar un objeto JSON por línea; fecha/hora, usuario, acción,
-    # resultado y detalles no sensibles. Nunca guardar contraseña ni hash.
-    pass
+# TODO: guardar un objeto JSON por línea; fecha/hora, usuario, acción,
+# resultado y detalles no sensibles. Nunca guardar contraseña ni hash.
+    evento = {
+        "fecha": datetime.now().isoformat(timespec="seconds"),
+        "usuario": usuario,
+        "accion": accion,
+        "resultado": resultado,
+        **detalles,
+    }
+    with open(LOG, "a", encoding="utf-8") as archivo:
+        archivo.write(json.dumps(evento, ensure_ascii=False) + "\n")
 
 
 def autenticar(nombre, clave):
     usuarios = json.loads(USUARIOS.read_text(encoding="utf-8"))
-    # TODO: integrar seguridad.py y migrar usuarios.json sin claves legibles.
     for usuario in usuarios:
-        if usuario["usuario"] == nombre and usuario["clave"] == clave:
+        if usuario["usuario"] == nombre and verificar_clave(usuario["hash"], clave):
             registrar_evento(nombre, "login", "exitoso")
             return {"usuario": nombre, "rol": usuario["rol"]}
-    # TODO: registrar también el intento fallido.
+    registrar_evento(nombre, "login", "fallido")
     print("Credenciales incorrectas.")
     return None
 
 
 def consultar_inventario(sesion):
-    # TODO: rechazar si no existe sesión válida.
+# TODO: rechazar si no existe sesión válida.
+    if not sesion:
+        print("Acceso denegado: debe iniciar sesión.")
+        registrar_evento("sin_sesion", "consultar", "rechazado")
+        return
     productos = cargar_inventario()
+    if productos is None:
+        return
     for producto in productos:
         print(producto["id"], producto["nombre"], producto["cantidad"])
 
 
 def modificar_cantidad(sesion, identificador, entrada):
-    # TODO: verificar sesión y rol AQUÍ, antes de modificar.
-    # TODO: validar entero entre 0 y 1000, sin interrumpir el programa.
-    cantidad = int(entrada)
+# TODO: verificar sesión y rol AQUÍ, antes de modificar.
+# TODO: validar entero entre 0 y 1000, sin interrumpir el programa.
+# TODO: informar identificador inexistente, sin crear productos.
+    # 1. Sesión
+    if not sesion:
+        print("Acceso denegado: debe iniciar sesión.")
+        registrar_evento("sin_sesion", "modificar", "rechazado",
+                         producto=identificador)
+        return False
+    # 2. Rol
+    if sesion.get("rol") != "admin":
+        print("Acceso denegado: solo admin puede modificar cantidades.")
+        registrar_evento(sesion["usuario"], "modificar", "rechazado_permisos",
+                         producto=identificador)
+        return False
+    # 3. Validación
+    texto = str(entrada).strip()
+    if not texto.isdecimal() or int(texto) > 1000:
+        print("Cantidad inválida: escriba un número entero entre 0 y 1000.")
+        return False
+    cantidad = int(texto)
+    # 4. Buscar y aplicar
     productos = cargar_inventario()
+    if productos is None:
+        return False
     for producto in productos:
         if producto["id"] == identificador:
             anterior = producto["cantidad"]
@@ -58,7 +100,7 @@ def modificar_cantidad(sesion, identificador, entrada):
             )
             print("Cantidad actualizada.")
             return True
-    # TODO: informar identificador inexistente, sin crear productos.
+    print("No existe un producto con el identificador", identificador)
     return False
 
 

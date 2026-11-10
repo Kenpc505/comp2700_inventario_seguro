@@ -1,0 +1,14 @@
+{"fecha": "2026-11-10T17:21:05", "usuario": "", "accion": "login", "resultado": "fallido"}
+{"fecha": "2026-11-10T17:21:07", "usuario": "", "accion": "login", "resultado": "fallido"}
+{"fecha": "2026-11-10T17:23:58", "usuario": "user", "accion": "login", "resultado": "fallido"}
+{"fecha": "2026-11-10T17:24:15", "usuario": "user", "accion": "login", "resultado": "exitoso"}
+{"fecha": "2026-11-10T17:24:32", "usuario": "user", "accion": "modificar", "resultado": "rechazado_permisos", "producto": "P001"}
+{"fecha": "2026-11-10T17:25:04", "usuario": "user", "accion": "modificar", "resultado": "rechazado_permisos", "producto": "P001"}
+{"fecha": "2026-11-10T17:25:29", "usuario": "admin", "accion": "login", "resultado": "exitoso"}
+{"fecha": "2026-11-10T17:25:37", "usuario": "admin", "accion": "modificar", "resultado": "exitoso", "producto": "P001", "anterior": 10, "nueva": 99}
+{"fecha": "2026-11-10T17:26:34", "usuario": "admin", "accion": "modificar", "resultado": "exitoso", "producto": "P001", "anterior": 99, "nueva": 0}
+{"fecha": "2026-11-10T17:26:44", "usuario": "admin", "accion": "modificar", "resultado": "exitoso", "producto": "P001", "anterior": 0, "nueva": 1000}
+{"fecha": "2026-11-10T17:28:13", "usuario": "UserDemo2700!", "accion": "login", "resultado": "fallido"}
+{"fecha": "2026-11-10T17:28:21", "usuario": "user", "accion": "login", "resultado": "exitoso"}
+{"fecha": "2026-11-10T17:28:32", "usuario": "user", "accion": "modificar", "resultado": "rechazado_permisos", "producto": "P001"}
+{"fecha": "2026-11-10T17:28:48", "usuario": "admin", "accion": "login", "resultado": "exitoso"}
