@@ -1,5 +1,7 @@
 # Base educativa — COMP 2700
 
+Kenneth Pérez Camacho       Y00616770
+
 Esta versión contiene debilidades intencionales. Utilice únicamente los datos
 ficticios incluidos, en su computadora. No es una aplicación de producción.
 
@@ -54,3 +56,27 @@ Solamente auditoria.jsonl utiliza un objeto por línea.
 
 Complete este README con su nombre, ejecución, pruebas, fuentes y uso de IA.
 No suba .venv, __pycache__, credenciales reales ni datos personales de terceros.
+
+## Pruebas
+
+| Área | Prueba | Resultado |
+|---|---|---|
+| Autenticación | Login correcto, contraseña incorrecta, usuario inexistente | Acceso solo con credenciales correctas; mismo mensaje de rechazo |
+| Autorización | `python prueba_autorizacion.py` (sesión user y None) | Rechazado; P001 sin cambio |
+| Validación | -1, 1001, abc, 2.5, vacío / 0 y 1000 | Inválidos rechazados / límites aceptados |
+| Modificación | P001 de 10 a 20; P999 | Cambio aplicado; P999 informado sin crear productos |
+| Persistencia | Cerrar y volver a abrir | P001 conserva 20 |
+| Errores | Archivo ausente; `ESTO NO ES JSON` | Mensaje controlado; archivo no recreado ni sobrescrito |
+
+## Fuentes
+
+- argon2-cffi: https://argon2-cffi.readthedocs.io/en/stable/api.html
+- OWASP Password Storage Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+- Python json: https://docs.python.org/3/library/json.html
+
+## Uso de IA
+
+- Herramienta: Claude (Anthropic).
+- Uso: comprender los requisitos, organizar los pasos y las correcciones de app.py.
+- Verificación: ejecuté el programa y prueba_autorizacion.py con los casos de la tabla y revisé usuarios.json y auditoria.jsonl.
+- Sugerencia corregida: la validación se cambió de isdigit() a isdecimal(), porque isdigit() acepta caracteres como "²" que hacen fallar int().
